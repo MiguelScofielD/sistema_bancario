@@ -1,5 +1,5 @@
 class Conta:
-    def __init__(self, saldo):
+    def __init__(self, saldo=0):
         self.saldo = saldo
         self.n_saque = 0
         self.extrato_conta = ""
@@ -52,7 +52,7 @@ class Conta:
             [q] Sair
             
             => """
-        )
+        ).lower()
         if operacao == "s":
             return self.saque()
         elif operacao == "d":
