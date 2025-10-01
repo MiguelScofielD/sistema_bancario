@@ -24,16 +24,13 @@ def menu():
 
 
 def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
-    excedeu_saldo = valor > saldo
-    excedeu_limite = valor > limite
-    excedeu_saques = numero_saques >= limite_saques
-    if excedeu_saldo:
+    if valor > saldo:
         print("Operação falhou! Você não tem saldo suficiente.")
 
-    elif excedeu_limite:
+    elif valor > limite:
         print("Operação falhou! O valor do saque excede o limite.")
 
-    elif excedeu_saques:
+    elif numero_saques >= limite_saques:
         print("Operação falhou! Número máximo de saques excedido.")
 
     elif valor > 0:
@@ -67,8 +64,11 @@ def exibir_extrato(saldo, /, *, extrato):
 
 
 def filtrar_usuario(cpf, usuarios):
-    usuarios_filtratos = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
-    return usuarios_filtratos[0] if usuarios_filtratos else None
+    for usuario in usuarios:
+        if usuario["cpf"] == cpf:
+            return True
+        else:
+            return None
 
 
 def criar_usuario(usuarios):
@@ -82,7 +82,7 @@ def criar_usuario(usuarios):
     nome = input("Digite o nome completo: ")
     data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
     endereco = input(
-        "Informe o endereço (logradourom, nr - bairro - cidade/segla estado): "
+        "Qual o endereço (logradourom, nr - bairro - cidade/segla estado): "
     )
 
     usuarios.append(
@@ -98,23 +98,27 @@ def criar_usuario(usuarios):
 
 
 def criar_conta(agencia, numero_conta, usuarios):
-    cpf = input("Informe o CPF do usuário: ")
+    cpf = input("Digite o CPF do usuário: ")
     usuario = filtrar_usuario(cpf, usuarios)
 
     if usuario:
         print("Conta criada com sucesso!")
         return {"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario}
+    else:
+        print(
+            "Houve um problema ao tentar criar sua conta. Tente novamente mais tarde."
+        )
 
 
 def listar_contas(contas):
     for conta in contas:
-        linha = f"""\
+        texto = f"""\
             Agência:\t{conta["agencia"]}
             C/C:\t{conta["numero_conta"]}
             Titular:\t{conta["usuario"]["nome"]}
         """
-        print("=" * 100)
-        print(linha)
+        print("===================================")
+        print(texto)
 
 
 while True:
